@@ -1,0 +1,32 @@
+---
+title: "ST558 Homework 9"
+format: html
+editor: visual
+---
+
+```{r}
+#| message: FALSE
+#| echo: TRUE
+#| warning: FALSE
+
+library(janitor)
+library(tidyverse)
+bike_data <- read_csv("https://www4.stat.ncsu.edu/online/datasets/SeoulBikeData.csv",locale = locale(encoding = "ISO-8859-1"))
+
+#check for missingness function
+sum_na <- function(column){
+  sum(is.na(column))
+}
+na_counts <- bike_data |>
+  summarize(across(everything(), sum_na))
+
+#convert the date to be an actual date
+bike_data$date_new<-as.Date(bike_data$Date,format="%m/%d/%y")
+#convert the character vars to factor
+bike_data <- bike_data %>% mutate(across(where(is.character), as.factor))
+
+```
+
+```{r}
+summary(bike_data$rented_bike_count)
+```
